@@ -11,8 +11,8 @@
         <input type="text" v-model="pageName">
         <button class="create" v-on:click="createNewHtmlPage">Создать страницу</button>
         <button class="remove">Удалить страницу</button>
-        <div v-for="page in pageList">
-            <h1>{{ page }} <a href="#" v-on:click="removeHtmlPage(page)">(x)</a></h1>
+        <div v-for="(page, index) in pageList">
+            <h1>{{ `${index+1} - ${page}` }} <a href="#" v-on:click="removeHtmlPage(page)">(x)</a></h1>
         </div>
     </div>    
     <script src="./bundle.js"></script>
