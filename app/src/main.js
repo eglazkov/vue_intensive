@@ -21,3 +21,16 @@ $(".create").click(() => {
         alert("Такая страница уже существует!")
     });
 });
+
+$(".remove").click(() => {
+    $("h1").remove();
+    $.post("./api/removeHtmlPage.php", {
+        name: $("input").val()
+    }, (data) => {
+        getPagesList();
+    })
+    .fail(() => {
+        alert(`Страница ${$("input").val()}.html не найдена!`);
+        getPagesList();
+    });
+});
