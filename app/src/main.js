@@ -1,36 +1,32 @@
-const $ = require("jquery");
+const Vue = require('vue');
+const axios = require('axios');
 
-const getPagesList = () => {
-    $.get('./api', (data) => {
-        data.forEach(file => {
-            $("body").append(`<h1>${file}</h1>`);
-        });
-    }, "JSON");
-};
-
-getPagesList();
-
-$(".create").click(() => {
-    $("h1").remove();
-    $.post("./api/createNewHtmlPage.php", {
-        name: $("input").val()
-    }, (data) => {
-        getPagesList();
-    })
-    .fail(() => {
-        alert("Такая страница уже существует!")
-    });
-});
-
-$(".remove").click(() => {
-    $("h1").remove();
-    $.post("./api/removeHtmlPage.php", {
-        name: $("input").val()
-    }, (data) => {
-        getPagesList();
-    })
-    .fail(() => {
-        alert(`Страница ${$("input").val()}.html не найдена!`);
-        getPagesList();
-    });
+new Vue({
+    el: '#app',
+    data: {
+        "pageList": [],
+        "pageName": ''
+    },
+    methods: {
+        createNewHtmlPage () {
+            axios
+                .post("./api/createNewHtmlPage.php", {name: this.pageName})
+                .then(() => this.updatePageList());
+        },
+        removeHtmlPage (page) {
+            axios
+                .post("./api/removeHtmlPage.php", {name: page})
+                .then(() => this.updatePageList());
+        },
+        updatePageList() {
+            axios
+                .get("./api/")
+                .then(response => {
+                    this.pageList = response.data;
+                })
+        }
+    },
+    created() {
+       this.updatePageList();
+    }
 });
